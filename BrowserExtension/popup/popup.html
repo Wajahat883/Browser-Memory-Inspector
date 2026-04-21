@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,19 +17,66 @@
         Waiting for scan data...
       </section>
 
-      <section class="cards">
+      <section class="cards cards-4">
         <article class="card high">
-          <h2>High</h2>
+          <h2>Active High</h2>
           <p id="highCount">0</p>
         </article>
         <article class="card medium">
-          <h2>Medium</h2>
+          <h2>Active Medium</h2>
           <p id="mediumCount">0</p>
         </article>
         <article class="card total">
-          <h2>Total Entries</h2>
+          <h2>Active Entries</h2>
           <p id="totalCount">0</p>
         </article>
+        <article class="card sites">
+          <h2>Scanned Sites</h2>
+          <p id="siteCount">0</p>
+        </article>
+      </section>
+
+      <section class="panel controls">
+        <div class="field">
+          <label for="hostFilter">Filter Host</label>
+          <input id="hostFilter" type="text" placeholder="youtube.com" />
+        </div>
+        <div class="field">
+          <label for="sortSelect">Sort By</label>
+          <select id="sortSelect">
+            <option value="latest">Latest Scan</option>
+            <option value="high">High Count</option>
+            <option value="medium">Medium Count</option>
+            <option value="host">Host Name</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="siteSelect">Site Drill-down</label>
+          <select id="siteSelect"></select>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Site-to-Site Comparison</h3>
+        <div class="table-wrap">
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Host</th>
+                <th>High</th>
+                <th>Medium</th>
+                <th>Total Findings</th>
+                <th>Last Scan</th>
+              </tr>
+            </thead>
+            <tbody id="comparisonBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3 id="siteTitle">Selected Site Details</h3>
+        <p class="muted" id="siteMeta">No site selected</p>
       </section>
 
       <section class="panel">
@@ -40,6 +87,11 @@
       <section class="panel">
         <h3>Medium Vulnerabilities</h3>
         <ul id="mediumList" class="finding-list"></ul>
+      </section>
+
+      <section class="panel">
+        <h3>IndexedDB Metadata</h3>
+        <ul id="indexedDbList" class="finding-list"></ul>
       </section>
 
       <section class="panel" id="errorPanel" hidden>

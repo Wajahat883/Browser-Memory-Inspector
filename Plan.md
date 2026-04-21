@@ -17,6 +17,7 @@
 9. [Enhanced Features (Professional Extensions)](#enhanced-features-professional-extensions)
 10. [Execution Plan - Dynamic Vulnerability Flow](#execution-plan---dynamic-vulnerability-flow)
 11. [Cross-Application Dynamic Inspection Plan](#cross-application-dynamic-inspection-plan)
+12. [Execution Plan - IndexedDB and Site Comparison](#execution-plan---indexeddb-and-site-comparison)
 
 ---
 
@@ -127,6 +128,76 @@ A normal website cannot directly read storage from a different domain due to bro
 - User can inspect vulnerabilities on external sites dynamically
 - High and Medium findings clearly visible with location
 - Results refresh automatically without manual hardcoded flow
+
+---
+
+## Execution Plan - IndexedDB and Site Comparison
+
+### Goal
+Add dynamic IndexedDB metadata inspection and a popup comparison view so users can compare vulnerability posture across multiple sites.
+
+### Scope
+- IndexedDB metadata scan (database names, object stores, key paths, version, estimated size signals)
+- Site-to-site comparison of High/Medium findings
+- Dynamic updates with no hardcoded site logic
+
+### Implementation Steps
+- [x] Extend content scanner to collect IndexedDB metadata safely per site
+- [x] Add IndexedDB metadata normalization in scan payload
+- [x] Add analyzer rules for IndexedDB risk signals
+- [x] Persist scans by host in background state with latest timestamp
+- [x] Build popup comparison table for multi-site High/Medium counts
+- [x] Add filters and sorting (host, severity, latest scan time)
+- [x] Add drill-down for each site (storage type, key, reason)
+- [x] Add privacy guardrails (mask previews, local-only processing)
+- [ ] Validate with manual test matrix across at least 3 sites
+
+### IndexedDB Collection Design
+- Read metadata only by default (no full record extraction)
+- Capture:
+  - Database name
+  - Version
+  - Object store names
+  - Key path info (if available)
+  - Approximate item count when accessible
+- Timeout/guard for blocked or restricted IndexedDB access
+
+### Risk Classification Additions
+- High:
+  - IndexedDB keys/store names suggesting tokens, credentials, payment or identity secrets
+  - Strong credential-like patterns in sampled metadata labels
+- Medium:
+  - Sensitive keywords in DB or object store names
+  - Oversized opaque blobs associated with auth-like store names
+- Low:
+  - Generic app cache/setting store names with no sensitive indicators
+
+### Popup Comparison UI Plan
+- Summary cards:
+  - Total scanned sites
+  - Sites with High findings
+  - Sites with Medium findings
+- Comparison table columns:
+  - Host
+  - High count
+  - Medium count
+  - Total findings
+  - Last scan time
+- Site drill-down panel:
+  - Cookies/localStorage/sessionStorage/IndexedDB sections
+  - Top reasons and recommendations
+
+### Dynamic Behavior Requirements
+- Auto-refresh active tab scan
+- Update comparison table when switching tabs/sites
+- Keep recent scan history per host in extension storage
+- No manual page reload required
+
+### Acceptance Criteria
+- IndexedDB metadata appears in scan payload and UI
+- User can compare at least 3 scanned sites side by side
+- High/Medium counts update dynamically by host
+- Drill-down shows where vulnerability is found and why
 
 ---
 

@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   --bg: #0b1220;
   --panel: #111a2d;
   --line: #1c2a45;
@@ -7,6 +7,7 @@
   --high: #ef4444;
   --medium: #f59e0b;
   --total: #38bdf8;
+  --sites: #22c55e;
 }
 
 * {
@@ -15,8 +16,8 @@
 
 body {
   margin: 0;
-  width: 420px;
-  max-height: 640px;
+  width: 440px;
+  max-height: 680px;
   overflow-y: auto;
   background: radial-gradient(circle at top, #16223d 0%, var(--bg) 55%);
   color: var(--text);
@@ -65,9 +66,12 @@ body {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 12px;
+}
+
+.cards-4 {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .card {
@@ -102,6 +106,10 @@ body {
   color: var(--total);
 }
 
+.card.sites p {
+  color: var(--sites);
+}
+
 .panel {
   border: 1px solid var(--line);
   background: rgba(15, 27, 49, 0.92);
@@ -113,6 +121,70 @@ body {
 .panel h3 {
   margin: 0 0 8px;
   font-size: 13px;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.controls .field:last-child {
+  grid-column: span 2;
+}
+
+.field {
+  display: grid;
+  gap: 4px;
+}
+
+.field label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.field input,
+.field select {
+  border: 1px solid #28406d;
+  background: #0f1b34;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.comparison-table th,
+.comparison-table td {
+  border-bottom: 1px solid #23375f;
+  text-align: left;
+  padding: 6px;
+}
+
+.comparison-row {
+  cursor: pointer;
+}
+
+.comparison-row:hover {
+  background: rgba(39, 74, 126, 0.25);
+}
+
+.active-row {
+  background: rgba(56, 189, 248, 0.18);
+}
+
+.empty-cell {
+  color: var(--muted);
+  font-style: italic;
 }
 
 .finding-list {
@@ -143,7 +215,8 @@ body {
   color: var(--muted);
 }
 
-.empty {
+.empty,
+.muted {
   font-size: 12px;
   color: var(--muted);
 }

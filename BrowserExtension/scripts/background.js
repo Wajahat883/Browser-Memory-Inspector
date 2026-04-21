@@ -1,9 +1,53 @@
+﻿const STORAGE_KEY = "BMI_PERSISTED_STATE_V1";
+
 const state = {
   activeTabId: null,
   activeScan: null,
   lastError: null,
   scansByHost: {}
 };
+
+async function persistState() {
+  try {
+    await chrome.storage.local.set({
+      [STORAGE_KEY]: {
+        scansByHost: state.scansByHost
+      }
+    });
+  } catch (_error) {
+    // Ignore persistence errors.
+  }
+}
+
+async function hydrateState() {
+  try {
+    const stored = await chrome.storage.local.get(STORAGE_KEY);
+    const cached = stored?.[STORAGE_KEY];
+    if (cached?.scansByHost && typeof cached.scansByHost === "object") {
+      state.scansByHost = cached.scansByHost;
+    }
+  } catch (_error) {
+    // Ignore hydration errors.
+  }
+}
+
+function trimHostHistory(maxHosts = 50) {
+  const hosts = Object.keys(state.scansByHost || {});
+  if (hosts.length <= maxHosts) {
+    return;
+  }
+
+  hosts
+    .sort((a, b) => {
+      const aTs = state.scansByHost[a]?.timestamp || 0;
+      const bTs = state.scansByHost[b]?.timestamp || 0;
+      return bTs - aTs;
+    })
+    .slice(maxHosts)
+    .forEach((host) => {
+      delete state.scansByHost[host];
+    });
+}
 
 function notifyPopup() {
   chrome.runtime.sendMessage({
@@ -24,7 +68,7 @@ function triggerScanOnTab(tabId) {
   });
 }
 
-chrome.tabs.onActivated.addListener(async ({ tabId }) => {
+chrome.tabs.onActivated.addListener(({ tabId }) => {
   state.activeTabId = tabId;
   triggerScanOnTab(tabId);
   notifyPopup();
@@ -43,6 +87,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     const host = payload.host || "unknown-host";
     state.scansByHost[host] = payload;
+    trimHostHistory(50);
 
     if (sender.tab && sender.tab.id === state.activeTabId) {
       state.activeScan = payload;
@@ -51,6 +96,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       state.activeTabId = sender.tab?.id ?? null;
     }
 
+    persistState();
     notifyPopup();
     sendResponse({ ok: true });
     return true;
@@ -83,12 +129,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   return false;
 });
 
-chrome.runtime.onInstalled.addListener(() => {
+async function initialize() {
+  await hydrateState();
+
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     const activeTab = tabs[0];
     if (activeTab?.id) {
       state.activeTabId = activeTab.id;
       triggerScanOnTab(activeTab.id);
     }
+    notifyPopup();
   });
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  initialize();
 });
+
+chrome.runtime.onStartup.addListener(() => {
+  initialize();
+});
+
+initialize();
