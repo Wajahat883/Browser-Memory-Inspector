@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RefreshCw, Download } from 'lucide-react';
 import { useStorageStore, useFilteredEntries } from '../store/storageStore';
 import { reportGenerator } from '../services/reportGenerator';
@@ -6,6 +6,7 @@ import StorageViewer from './StorageViewer';
 import FilterPanel from './FilterPanel';
 import ReportModal from './ReportModal';
 import StatsCard from './StatsCard';
+import VulnerabilityPanel from './VulnerabilityPanel';
 
 interface DashboardProps {
   onRefresh: () => void;
@@ -23,7 +24,7 @@ export default function Dashboard({ onRefresh }: DashboardProps) {
   const filteredEntries = useFilteredEntries();
 
   // Auto-refresh effect
-  React.useEffect(() => {
+  useEffect(() => {
     if (!autoRefresh) return;
 
     const interval = setInterval(() => {
@@ -127,11 +128,13 @@ export default function Dashboard({ onRefresh }: DashboardProps) {
           />
         </div>
 
+        <VulnerabilityPanel alerts={alerts} />
+
         {/* Filter Panel */}
         <FilterPanel />
 
         {/* Storage Viewer */}
-        <StorageViewer entries={filteredEntries} />
+        <StorageViewer entries={filteredEntries} onDataChanged={onRefresh} />
       </main>
 
       {/* Report Modal */}

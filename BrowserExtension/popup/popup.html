@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Browser Memory Inspector</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <h1>Browser Memory Inspector</h1>
+        <button id="refreshButton" class="btn">Refresh Scan</button>
+      </header>
+
+      <section class="status" id="statusLine">
+        Waiting for scan data...
+      </section>
+
+      <section class="cards">
+        <article class="card high">
+          <h2>High</h2>
+          <p id="highCount">0</p>
+        </article>
+        <article class="card medium">
+          <h2>Medium</h2>
+          <p id="mediumCount">0</p>
+        </article>
+        <article class="card total">
+          <h2>Total Entries</h2>
+          <p id="totalCount">0</p>
+        </article>
+      </section>
+
+      <section class="panel">
+        <h3>High Vulnerabilities</h3>
+        <ul id="highList" class="finding-list"></ul>
+      </section>
+
+      <section class="panel">
+        <h3>Medium Vulnerabilities</h3>
+        <ul id="mediumList" class="finding-list"></ul>
+      </section>
+
+      <section class="panel" id="errorPanel" hidden>
+        <h3>Last Scan Error</h3>
+        <p id="errorText"></p>
+      </section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

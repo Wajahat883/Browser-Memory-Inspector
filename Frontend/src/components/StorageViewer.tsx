@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Trash2, Copy, Eye, EyeOff } from 'lucide-react';
 import { StorageEntry } from '../types';
-import { useStorageStore, useAlertForEntry } from '../store/storageStore';
+import { useStorageStore } from '../store/storageStore';
 import { storageReader } from '../services/storageReader';
 import { truncateString, getRiskLevelColor, getRiskLevelEmoji, getStorageTypeColor, copyToClipboard } from '../utils/formatter';
 import RiskIndicator from './RiskIndicator';
 
 interface StorageViewerProps {
   entries: StorageEntry[];
+  onDataChanged: () => void;
 }
 
-export default function StorageViewer({ entries }: StorageViewerProps) {
+export default function StorageViewer({ entries, onDataChanged }: StorageViewerProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [hiddenValues, setHiddenValues] = useState<Set<string>>(new Set());
 
@@ -18,8 +19,10 @@ export default function StorageViewer({ entries }: StorageViewerProps) {
 
   const handleDelete = (entry: StorageEntry) => {
     if (confirm(`Delete ${entry.key}?`)) {
-      storageReader.deleteEntry(entry);
-      // Refresh would be handled by parent
+      const isDeleted = storageReader.deleteEntry(entry);
+      if (isDeleted) {
+        onDataChanged();
+      }
     }
   };
 
@@ -61,7 +64,7 @@ export default function StorageViewer({ entries }: StorageViewerProps) {
               const isHidden = hiddenValues.has(entry.id);
 
               return (
-                <tbody key={entry.id}>
+                <Fragment key={entry.id}>
                   <tr
                     className="border-b border-gray-700 hover:bg-gray-700/30 transition cursor-pointer"
                     onClick={() =>
@@ -263,7 +266,7 @@ export default function StorageViewer({ entries }: StorageViewerProps) {
                       </td>
                     </tr>
                   )}
-                </tbody>
+                </Fragment>
               );
             })}
           </tbody>

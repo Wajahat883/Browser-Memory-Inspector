@@ -1,0 +1,149 @@
+:root {
+  --bg: #0b1220;
+  --panel: #111a2d;
+  --line: #1c2a45;
+  --text: #d9e6ff;
+  --muted: #97abcf;
+  --high: #ef4444;
+  --medium: #f59e0b;
+  --total: #38bdf8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  width: 420px;
+  max-height: 640px;
+  overflow-y: auto;
+  background: radial-gradient(circle at top, #16223d 0%, var(--bg) 55%);
+  color: var(--text);
+  font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+}
+
+.app {
+  padding: 14px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.btn {
+  border: 1px solid #2a416f;
+  background: #1e3a6e;
+  color: #f5f9ff;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #26508f;
+}
+
+.status {
+  margin-bottom: 10px;
+  background: #10192d;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.card {
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  padding: 10px;
+  text-align: center;
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.card p {
+  margin: 6px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.card.high p {
+  color: var(--high);
+}
+
+.card.medium p {
+  color: var(--medium);
+}
+
+.card.total p {
+  color: var(--total);
+}
+
+.panel {
+  border: 1px solid var(--line);
+  background: rgba(15, 27, 49, 0.92);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.panel h3 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+
+.finding-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 8px;
+}
+
+.finding-item {
+  border: 1px solid #23375f;
+  border-radius: 8px;
+  background: rgba(9, 17, 33, 0.8);
+  padding: 8px;
+}
+
+.finding-item .title {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  word-break: break-all;
+}
+
+.finding-item .meta {
+  margin: 4px 0 0;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.empty {
+  font-size: 12px;
+  color: var(--muted);
+}

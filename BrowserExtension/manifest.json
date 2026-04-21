@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Browser Memory Inspector",
+  "description": "Dynamic vulnerability inspection for cookies, localStorage, and sessionStorage on active sites.",
+  "version": "1.0.0",
+  "permissions": ["storage", "tabs", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  "action": {
+    "default_title": "Browser Memory Inspector",
+    "default_popup": "popup/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Browser Memory Inspector icon">
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#0f172a"/>
+  <circle cx="29" cy="29" r="14" fill="none" stroke="#38bdf8" stroke-width="6"/>
+  <line x1="39" y1="39" x2="52" y2="52" stroke="#38bdf8" stroke-width="6" stroke-linecap="round"/>
+  <rect x="17" y="18" width="12" height="12" rx="2" fill="#22c55e" opacity="0.9"/>
+  <rect x="31" y="28" width="10" height="10" rx="2" fill="#f59e0b" opacity="0.9"/>
+</svg>

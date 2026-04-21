@@ -15,6 +15,118 @@
 7. [Testing Strategy](#testing-strategy)
 8. [Deployment Options](#deployment-options)
 9. [Enhanced Features (Professional Extensions)](#enhanced-features-professional-extensions)
+10. [Execution Plan - Dynamic Vulnerability Flow](#execution-plan---dynamic-vulnerability-flow)
+11. [Cross-Application Dynamic Inspection Plan](#cross-application-dynamic-inspection-plan)
+
+---
+
+## Execution Plan - Dynamic Vulnerability Flow
+
+### Goal
+Make the app continuously and dynamically scan browser storage, classify risk as High/Medium/Low, and clearly show users where High and Medium vulnerabilities exist.
+
+### Implementation Steps
+- [x] Add live scan triggers (startup, interval, window focus, storage events)
+- [x] Show vulnerability location details (storage type + key + reason)
+- [x] Refresh risk results automatically after delete actions
+- [x] Add a dedicated vulnerability summary panel for High and Medium findings
+- [x] Validate end-to-end behavior with TypeScript checks
+
+### Success Criteria
+- Users can immediately see High/Medium vulnerabilities while using the app
+- Vulnerability list updates without manual reload
+- Findings include where the issue is detected
+
+---
+
+## Cross-Application Dynamic Inspection Plan
+
+### Product Objective
+When a user opens Browser Inspector and browses another application/site (for example YouTube), the inspector should dynamically detect vulnerabilities and show:
+- Cookie risks
+- localStorage risks
+- sessionStorage risks
+- Other browser storage usage signals
+- Exact vulnerability level (High / Medium / Low)
+- Exact location (site + storage type + key name)
+
+### Important Technical Constraint
+A normal website cannot directly read storage from a different domain due to browser same-origin policy.
+
+### Required Architecture (To support other apps/sites)
+- Browser Extension (Manifest v3)
+- Content Script injected per active tab
+- Background Service Worker for tab coordination
+- DevTools Panel / Extension Popup UI for live results
+- Message channel between content script and inspector UI
+
+### Implementation Status
+- [x] Manifest v3 extension scaffold created
+- [x] Content script dynamic scanner implemented (cookies/localStorage/sessionStorage)
+- [x] Background service worker implemented for active tab coordination
+- [x] Popup dashboard implemented for live High/Medium vulnerability display
+- [x] Manual refresh trigger added for active-tab re-scan
+- [x] Host/location/reason shown for each vulnerability finding
+
+### Dynamic Flow (Real-Time, Not Hardcoded)
+1. User opens an external site (example: YouTube)
+2. Content script reads runtime data from that same tab origin:
+   - `document.cookie` (accessible portion)
+   - `localStorage`
+   - `sessionStorage`
+3. Data is streamed to analyzer every few seconds and on change events
+4. Risk engine scores each item as High / Medium / Low
+5. UI updates live with:
+   - Vulnerability count by severity
+   - Affected keys/items
+   - Why flagged
+   - Recommended fix
+
+### Data Collection Scope
+- Cookies: name, value length, security flags, expiry, domain, path
+- localStorage: key, value length, detected sensitive patterns
+- sessionStorage: key, value length, detected sensitive patterns
+- Optional (phase 2): IndexedDB summary metadata
+
+### Vulnerability Rules (Initial)
+- High:
+  - Exposed auth token/JWT/API key/credential patterns
+  - Payment or identity patterns (credit card, SSN)
+- Medium:
+  - Sensitive keywords in key/value without direct credential pattern
+  - Long encoded blobs stored in non-secure keys
+- Low:
+  - Non-sensitive app preferences/settings
+
+### UI Requirements
+- Live dashboard (auto-refresh)
+- Severity cards (High / Medium / Low)
+- Per-site findings table
+- Filter by site, storage type, and severity
+- Click row to view raw value, reasons, and remediation suggestions
+
+### Dynamic Behavior Requirements
+- Update on tab switch
+- Update on page navigation/reload
+- Update on storage mutation
+- Update on timer (fallback polling)
+- No hardcoded site names or key lists in UI logic
+
+### Security & Privacy Requirements
+- Run analysis locally in browser by default
+- No external upload unless user explicitly exports
+- Mask sensitive value preview by default
+
+### Phased Delivery Plan
+- Phase A: Extension scaffold + tab-level data capture
+- Phase B: Dynamic vulnerability scoring + live UI binding
+- Phase C: Multi-tab/site comparison + export reports
+- Phase D: Advanced detections + compliance checks
+
+### Acceptance Criteria
+- User can inspect vulnerabilities on external sites dynamically
+- High and Medium findings clearly visible with location
+- Results refresh automatically without manual hardcoded flow
 
 ---
 
