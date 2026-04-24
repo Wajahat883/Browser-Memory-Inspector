@@ -144,13 +144,19 @@ body {
 }
 
 .field input,
-.field select {
+.field select,
+.field textarea {
   border: 1px solid #28406d;
   background: #0f1b34;
   color: var(--text);
   border-radius: 8px;
   padding: 6px 8px;
   font-size: 12px;
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 70px;
 }
 
 .table-wrap {
@@ -219,4 +225,45 @@ body {
 .muted {
   font-size: 12px;
   color: var(--muted);
+}
+
+.export-panel {
+  background: linear-gradient(135deg, rgba(15, 27, 49, 0.95) 0%, rgba(25, 40, 65, 0.9) 100%);
+  border: 1px solid #2a4a7f;
+}
+
+.export-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.btn-export {
+  border: 1px solid #3a5a9f;
+  background: linear-gradient(135deg, #2a4a7f 0%, #1a3a6f 100%);
+  color: #e0e9ff;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-export:hover {
+  background: linear-gradient(135deg, #3a6aaf 0%, #2a5a9f 100%);
+  border-color: #4a7acf;
+  box-shadow: 0 0 8px rgba(58, 189, 248, 0.3);
+}
+
+.btn-export:active {
+  transform: scale(0.98);
+}
+
+.export-note {
+  margin: 0;
+  font-size: 10px;
+  color: var(--muted);
+  font-style: italic;
 }

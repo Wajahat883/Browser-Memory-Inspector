@@ -14,7 +14,7 @@ export class RiskAnalyzer {
 
     entries.forEach((entry) => {
       const keywords = detectKeywords(entry.value, entry.key);
-      const patterns = detectPatterns(entry.value);
+      const patterns = detectPatterns(entry.value, entry.key);
 
       if (keywords.length > 0 || patterns.length > 0) {
         const riskLevel = this.calculateRiskScore(

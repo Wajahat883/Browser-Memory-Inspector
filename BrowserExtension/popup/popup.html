@@ -54,6 +54,45 @@
           <label for="siteSelect">Site Drill-down</label>
           <select id="siteSelect"></select>
         </div>
+        <div class="field">
+          <label for="hunterModeSelect">Hunter Scan Mode</label>
+          <select id="hunterModeSelect">
+            <option value="passive">Passive (safe default)</option>
+            <option value="active">Active (authorized testing only)</option>
+          </select>
+        </div>
+        <div class="field" style="align-self: end;">
+          <button id="saveHunterModeBtn" class="btn">Apply Hunter Mode</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h3>Hunter Safety Policy</h3>
+        <div class="controls">
+          <div class="field">
+            <label for="hunterAllowlistInput">Allowlist Hosts (comma-separated)</label>
+            <input id="hunterAllowlistInput" type="text" placeholder="example.com, api.example.com" />
+          </div>
+          <div class="field">
+            <label for="hunterRateLimitInput">Max Scans / Minute</label>
+            <input id="hunterRateLimitInput" type="number" min="1" max="120" value="24" />
+          </div>
+          <div class="field">
+            <label for="hunterActiveProfileInput">Active Identity Profile</label>
+            <input id="hunterActiveProfileInput" type="text" placeholder="user-a" />
+          </div>
+          <div class="field" style="align-self: end;">
+            <label for="hunterKillSwitchInput">Hunter Kill Switch</label>
+            <input id="hunterKillSwitchInput" type="checkbox" />
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <label for="hunterProfilesInput">Identity Profiles JSON</label>
+            <textarea id="hunterProfilesInput" rows="4" placeholder='[{"name":"user-a","role":"user","ids":["1001","9f2a..."]}]'></textarea>
+          </div>
+          <div class="field" style="grid-column: span 2;">
+            <button id="saveHunterPolicyBtn" class="btn">Save Hunter Policy</button>
+          </div>
+        </div>
       </section>
 
       <section class="panel">
@@ -80,6 +119,27 @@
       </section>
 
       <section class="panel">
+        <h3>Risk Logic Summary</h3>
+        <p class="muted" id="riskFormula">keyword + context + validation = risk</p>
+        <div id="riskSummary" class="finding-list"></div>
+      </section>
+
+      <section class="panel">
+        <h3>AI Insight</h3>
+        <div class="panel controls" style="margin-bottom: 12px;">
+          <div class="field">
+            <label for="geminiApiKey">Gemini API Key</label>
+            <input id="geminiApiKey" type="password" placeholder="Paste your Gemini API key" autocomplete="off" />
+          </div>
+          <div class="field" style="align-self: end;">
+            <button id="saveGeminiKeyBtn" class="btn">Save Key</button>
+          </div>
+        </div>
+        <p class="muted" id="aiStatus">Saved locally in this extension only.</p>
+        <div id="aiInsight" class="finding-list"></div>
+      </section>
+
+      <section class="panel">
         <h3>High Vulnerabilities</h3>
         <ul id="highList" class="finding-list"></ul>
       </section>
@@ -90,13 +150,40 @@
       </section>
 
       <section class="panel">
+        <h3>Hunter Findings (Extended Scan)</h3>
+        <ul id="hunterFindingsList" class="finding-list"></ul>
+      </section>
+
+      <section class="panel">
         <h3>IndexedDB Metadata</h3>
         <ul id="indexedDbList" class="finding-list"></ul>
       </section>
+      
+        <section class="panel">
+          <h3>Level 3: DOM Findings</h3>
+          <ul id="domFindingsList" class="finding-list"></ul>
+        </section>
+      
+        <section class="panel">
+          <h3>Level 3: API Endpoints Detected</h3>
+          <ul id="endpointsList" class="finding-list"></ul>
+        </section>
 
       <section class="panel" id="errorPanel" hidden>
         <h3>Last Scan Error</h3>
         <p id="errorText"></p>
+      </section>
+
+      <section class="panel export-panel">
+        <h3>Export Report</h3>
+        <div class="export-buttons">
+          <button id="exportJsonBtn" class="btn btn-export">📥 JSON</button>
+          <button id="exportCsvBtn" class="btn btn-export">📊 CSV</button>
+          <button id="exportHtmlBtn" class="btn btn-export">📄 HTML</button>
+          <button id="exportCopyBtn" class="btn btn-export">📋 Copy JSON</button>
+          <button id="exportSarifBtn" class="btn btn-export">🛡️ SARIF</button>
+        </div>
+        <p class="export-note">Export current site findings or comparison data</p>
       </section>
     </main>
 

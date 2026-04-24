@@ -58,6 +58,29 @@ function notifyPopup() {
   });
 }
 
+function updateBadge() {
+  if (!state.activeScan) {
+    chrome.action.setBadgeText({ text: "" });
+    return;
+  }
+
+  const alerts = state.activeScan.alerts || [];
+  const highCount = alerts.filter((a) => a.riskLevel === "high").length;
+
+  if (highCount > 0) {
+    chrome.action.setBadgeText({ text: String(highCount) });
+    chrome.action.setBadgeBackgroundColor({ color: "#ef4444" }); // Red for high risk
+  } else {
+    const mediumCount = alerts.filter((a) => a.riskLevel === "medium").length;
+    if (mediumCount > 0) {
+      chrome.action.setBadgeText({ text: String(mediumCount) });
+      chrome.action.setBadgeBackgroundColor({ color: "#f59e0b" }); // Orange for medium
+    } else {
+      chrome.action.setBadgeText({ text: "" });
+    }
+  }
+}
+
 function triggerScanOnTab(tabId) {
   if (!tabId || tabId < 0) {
     return;
@@ -71,6 +94,7 @@ function triggerScanOnTab(tabId) {
 chrome.tabs.onActivated.addListener(({ tabId }) => {
   state.activeTabId = tabId;
   triggerScanOnTab(tabId);
+  updateBadge();
   notifyPopup();
 });
 
@@ -88,6 +112,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const host = payload.host || "unknown-host";
     state.scansByHost[host] = payload;
     trimHostHistory(50);
+      // Level 3: Store DOM findings and API endpoints
+      if (payload.level3Findings) {
+        state.scansByHost[host].level3Findings = payload.level3Findings;
+      }
 
     if (sender.tab && sender.tab.id === state.activeTabId) {
       state.activeScan = payload;
@@ -97,6 +125,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 
     persistState();
+    updateBadge();
     notifyPopup();
     sendResponse({ ok: true });
     return true;
@@ -138,6 +167,7 @@ async function initialize() {
       state.activeTabId = activeTab.id;
       triggerScanOnTab(activeTab.id);
     }
+    updateBadge();
     notifyPopup();
   });
 }
